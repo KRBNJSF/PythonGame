@@ -79,11 +79,11 @@ while isRunning:
     # convert alpha to draw only the object without transparent background -> collision
     playerRect = pygame.draw.rect(screen, (255, 0, 255), (x, y, playerWidth, playerHeight))
     player2Rect = pygame.draw.rect(screen, (0, 50, 50), (player2X, player2Y, player2Width, player2Height))
-    player2Img = pygame.image.load("pixelart.png").convert_alpha()
+    player2Img = pygame.image.load("player1Right.png").convert_alpha()
     player2Img = pygame.transform.flip(player2Img, player2Direction, False)
     player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     # pes = screen.blit(imgObject, (pyautogui.position().x, pyautogui.position().y))
-    screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
+    # screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
     screen.blit(imgObject, (dogX, dogY))
     screen.blit(mainCharacter, (x, y))
 
@@ -94,17 +94,30 @@ while isRunning:
     if 0 <= timing <= 10:
         playerRect = pygame.draw.rect(screen, (0, 0, 255), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (100, 100, 100), (foodX, foodY, 20, 20))
+        player2Img = pygame.image.load("player1Right.png").convert_alpha()
+        player2Img = pygame.transform.flip(player2Img, player2Direction, False)
+        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     elif 10 <= timing <= 20:
         playerRect = pygame.draw.rect(screen, (255, 0, 0), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (10, 255, 50), (foodX, foodY, 20, 20))
+        player2Img = pygame.image.load("player1Left.png").convert_alpha()
+        player2Img = pygame.transform.flip(player2Img, player2Direction, False)
+        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     elif 20 <= timing <= 30:
         playerRect = pygame.draw.rect(screen, (0, 255, 255), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (30, 55, 150), (foodX, foodY, 20, 20))
+        player2Img = pygame.image.load("player1Left.png").convert_alpha()
+        player2Img = pygame.transform.flip(player2Img, player2Direction, False)
+        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     elif 30 <= timing <= 40:
         playerRect = pygame.draw.rect(screen, (0, 0, 50), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (0, 30, 90), (foodX, foodY, 20, 20))
+        player2Img = pygame.image.load("player1Right.png").convert_alpha()
+        player2Img = pygame.transform.flip(player2Img, player2Direction, False)
+        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     elif timing >= 40:
         timing = 0
+    screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
 
     if keys[pygame.K_w] and y > 0:
         y -= playerVelocity
@@ -165,8 +178,12 @@ while isRunning:
         playerVelocity = 7
 
     if player2Rect.colliderect(ammo):
+        player2Rect = pygame.draw.rect(screen, (40, 0, 0), (player2X, player2Y, player2Width, player2Height))
+        screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
         player2Velocity = 4
     elif player2Rect.colliderect(ammo2):
+        player2Rect = pygame.draw.rect(screen, (0, 0, 40), (player2X, player2Y, player2Width, player2Height))
+        screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
         player2Velocity = 15
     else:
         player2Velocity = 7
