@@ -16,7 +16,7 @@ player2X = pygame.display.Info().current_w - 150
 player2Y = pygame.display.Info().current_h - 150
 player2Height = 50
 player2Width = 50
-player2Velocity = 7
+player2Velocity = 8
 player2Direction = False
 
 dogX = 20
@@ -24,10 +24,22 @@ dogY = 20
 
 timing = 0
 
-start_text = my_font.render("First one to get 10 score wins", False, (0, 0, 255))
+start_text = my_font.render("First one to get 10 score wins!", False, (0, 0, 255))
 screen.blit(start_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
 pygame.display.update()
-time.sleep(2)
+time.sleep(1.3)
+
+screen.fill((0, 0, 0))
+start_text = my_font.render("Press 'ctrl+q' to end the game early!", False, (0, 0, 255))
+screen.blit(start_text, (pygame.display.Info().current_w / 3 + 40, pygame.display.Info().current_h / 2))
+pygame.display.update()
+time.sleep(1.3)
+
+screen.fill((0, 0, 0))
+start_text = my_font.render("Press 'i' to restart the game!", False, (0, 0, 255))
+screen.blit(start_text, (pygame.display.Info().current_w / 3 + 80, pygame.display.Info().current_h / 2))
+pygame.display.update()
+time.sleep(1.3)
 
 foodX = random.randint(10, pygame.display.Info().current_w - 20)
 foodY = random.randint(10, pygame.display.Info().current_h - 20)
@@ -36,7 +48,7 @@ y = 100
 x = 60
 playerWidth = 50
 playerHeight = 50
-playerVelocity = 7
+playerVelocity = 8
 playerDirection = False
 
 ammoX = x
@@ -133,8 +145,8 @@ while isRunning:
         # Restarting game
     if keys[pygame.K_i]:
         screen.fill((0, 50, 50))
-        end_text = restart_font.render(f'Restarting game', False, (0, 0, 0))
-        screen.blit(end_text, (pygame.display.Info().current_w / 2 - 300, pygame.display.Info().current_h / 2))
+        end_text = restart_font.render(f'Restarting the game!', False, (0, 0, 0))
+        screen.blit(end_text, (pygame.display.Info().current_w / 2 - 350, pygame.display.Info().current_h / 2))
         pygame.display.update()
         time.sleep(1)
         playerWidth = 50
@@ -175,7 +187,7 @@ while isRunning:
     elif playerRect.colliderect(ammo):
         playerVelocity = 15
     else:
-        playerVelocity = 7
+        playerVelocity = 8
 
     if player2Rect.colliderect(ammo):
         player2Rect = pygame.draw.rect(screen, (40, 0, 0), (player2X, player2Y, player2Width, player2Height))
@@ -186,7 +198,7 @@ while isRunning:
         screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
         player2Velocity = 15
     else:
-        player2Velocity = 7
+        player2Velocity = 8
 
     if playerRect.colliderect(food):
         playerWidth += 1
@@ -200,8 +212,8 @@ while isRunning:
         player2Width += 1
         player2Height += 1
         print(player2Width)
-        foodX = random.randint(10, pygame.display.Info().current_w)
-        foodY = random.randint(10, pygame.display.Info().current_h)
+        foodX = random.randint(10, pygame.display.Info().current_w - food.width)
+        foodY = random.randint(10, pygame.display.Info().current_h - food.height)
         food = pygame.draw.rect(screen, (255, 0, 255), (foodX, foodY, 10, 10))
 
         if playerRect.colliderect(ammo2):
@@ -219,11 +231,17 @@ while isRunning:
     dogY = random.randint(10, pygame.display.Info().current_h)
 
     if playerWidth >= 60 or player2Width >= 60 or keyboard.is_pressed("ctrl+q"):
-        if playerWidth >= 60:
+        if playerWidth >= 60 or playerWidth > player2Width:
             end_text = my_font.render(f'Player1 wins with {playerWidth - 50} score', False, (255, 0, 255))
+            screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
         else:
-            end_text = my_font.render(f'Player2 wins with {player2Width - 50} score', False, (0, 0, 255))
-        screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
+            if playerWidth == player2Width:
+                end_text = my_font.render(f'Tie!', False, (255, 0, 255))
+                screen.blit(end_text, (pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
+            else:
+                end_text = my_font.render(f'Player2 wins with {player2Width - 50} score', False, (0, 0, 255))
+                screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
+        # screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
         pygame.display.update()
         time.sleep(2)
         isRunning = False
