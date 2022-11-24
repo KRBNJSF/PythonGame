@@ -1,5 +1,3 @@
-from threading import Timer
-
 import pygame
 import random
 import keyboard
@@ -19,6 +17,7 @@ player2Y = pygame.display.Info().current_h - 150
 player2Height = 50
 player2Width = 50
 player2Velocity = 7
+player2Direction = False
 
 dogX = 20
 dogY = 20
@@ -30,14 +29,15 @@ screen.blit(start_text, (pygame.display.Info().current_w / 2 - 250, pygame.displ
 pygame.display.update()
 time.sleep(2)
 
-foodX = random.randint(10, pygame.display.Info().current_w)
-foodY = random.randint(10, pygame.display.Info().current_h)
+foodX = random.randint(10, pygame.display.Info().current_w - 20)
+foodY = random.randint(10, pygame.display.Info().current_h - 20)
 
 y = 100
 x = 60
 playerWidth = 50
 playerHeight = 50
 playerVelocity = 7
+playerDirection = False
 
 ammoX = x
 ammoY = y
@@ -76,16 +76,21 @@ while isRunning:
 
     keys = pygame.key.get_pressed()
 
+    # convert alpha to draw only the object without transparent background -> collision
     playerRect = pygame.draw.rect(screen, (255, 0, 255), (x, y, playerWidth, playerHeight))
-    player2Rect = pygame.draw.rect(screen, (0, 0, 255), (player2X, player2Y, player2Width, player2Height))
+    player2Rect = pygame.draw.rect(screen, (0, 50, 50), (player2X, player2Y, player2Width, player2Height))
+    player2Img = pygame.image.load("pixelart.png").convert_alpha()
+    player2Img = pygame.transform.flip(player2Img, player2Direction, False)
+    player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
     # pes = screen.blit(imgObject, (pyautogui.position().x, pyautogui.position().y))
+    screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
     screen.blit(imgObject, (dogX, dogY))
     screen.blit(mainCharacter, (x, y))
 
     # if clock.get_time() % 2 == 0:
     #  timing += 1
 
-    print(timing)
+    # print(timing)
     if 0 <= timing <= 10:
         playerRect = pygame.draw.rect(screen, (0, 0, 255), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (100, 100, 100), (foodX, foodY, 20, 20))
@@ -112,13 +117,12 @@ while isRunning:
         x += playerVelocity
     if keys[pygame.K_ESCAPE]:
         isRunning = False
+        # Restarting game
     if keys[pygame.K_i]:
         screen.fill((0, 50, 50))
         end_text = restart_font.render(f'Restarting game', False, (0, 0, 0))
         screen.blit(end_text, (pygame.display.Info().current_w / 2 - 300, pygame.display.Info().current_h / 2))
         pygame.display.update()
-        playerRect = pygame.draw.rect(screen, (0, 50, 50), (x, y, playerWidth, playerHeight))
-        playerRect
         time.sleep(1)
         playerWidth = 50
         playerHeight = 50
@@ -130,6 +134,9 @@ while isRunning:
         player2Height = 50
         player2X = pygame.display.Info().current_w - 150
         player2Y = pygame.display.Info().current_h - 150
+
+        foodX = random.randint(10, pygame.display.Info().current_w - food.width)
+        foodY = random.randint(10, pygame.display.Info().current_h - food.height)
     if keys[pygame.K_e]:
         ammoX = x
         ammoY = y
@@ -143,8 +150,10 @@ while isRunning:
         player2Y += player2Velocity
     if keys[pygame.K_LEFT] and player2X > 0:
         player2X -= player2Velocity
+        player2Direction = True
     if keys[pygame.K_RIGHT] and player2X < pygame.display.Info().current_w - player2Rect.width:
         player2X += player2Velocity
+        player2Direction = False
 
     pygame.mouse.set_visible(False)
 
@@ -181,10 +190,10 @@ while isRunning:
         if playerRect.colliderect(ammo2):
             playerVelocity = 0
 
-    playerRect
-    player2Rect
-    ammo
-    ammo2
+    # playerRect
+    # player2Img
+    # ammo
+    # ammo2
 
     pygame.display.update()
     screen.fill((0, 50, 50))
