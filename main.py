@@ -3,6 +3,8 @@ import random
 import keyboard
 import pyautogui
 import time
+from settings import Settings
+from entity.Entity import Entity
 
 pygame.init()
 
@@ -12,11 +14,16 @@ clock = pygame.time.Clock()
 my_font = pygame.font.SysFont("Comic Sans MS", 40)
 restart_font = pygame.font.SysFont("Comic Sans MS", 80)
 
+player1 = Entity(50, 50, 60, 100, 0, "player1Left.png")
+player2 = Entity(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 150, 0,
+                 "player1Left.png")
+
 player2X = pygame.display.Info().current_w - 150
 player2Y = pygame.display.Info().current_h - 150
 player2Height = 50
 player2Width = 50
 player2Velocity = 8
+player2Direction = False
 player2Direction = False
 
 dogX = 20
@@ -25,21 +32,26 @@ dogY = 20
 timing = 0
 
 start_text = my_font.render("First one to get 10 score wins!", False, (0, 0, 255))
-screen.blit(start_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
+screen.blit(start_text,
+            (pygame.display.Info().current_w // 2 - start_text.get_width() // 2, pygame.display.Info().current_h // 2))
 pygame.display.update()
-time.sleep(1.3)
+time.sleep(Settings.millis)
 
-screen.fill((0, 0, 0))
+screen.fill(Settings.BLACK)
 start_text = my_font.render("Press 'ctrl+q' to end the game early!", False, (0, 0, 255))
-screen.blit(start_text, (pygame.display.Info().current_w / 3 + 40, pygame.display.Info().current_h / 2))
+screen.blit(start_text,
+            (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
+             pygame.display.Info().current_h // 2 - start_text.get_height()))
 pygame.display.update()
-time.sleep(1.3)
+time.sleep(Settings.millis)
 
-screen.fill((0, 0, 0))
+screen.fill(Settings.BLACK)
 start_text = my_font.render("Press 'i' to restart the game!", False, (0, 0, 255))
-screen.blit(start_text, (pygame.display.Info().current_w / 3 + 80, pygame.display.Info().current_h / 2))
+screen.blit(start_text,
+            (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
+             pygame.display.Info().current_h // 2 - start_text.get_height() // 2))
 pygame.display.update()
-time.sleep(1.3)
+time.sleep(Settings.millis)
 
 foodX = random.randint(10, pygame.display.Info().current_w - 20)
 foodY = random.randint(10, pygame.display.Info().current_h - 20)
@@ -66,21 +78,25 @@ s.set_alpha(128)  # alpha level
 s.fill((255, 255, 255))  # this fills the entire surface
 screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
 
+# def gameLoop():
 while isRunning:
     timing += 1
     clock.tick(60)
     # screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
     pygame.display.set_caption(f'{clock.get_fps() :.1f} FPS ')
     ammo = pygame.draw.rect(screen, (40, 0, 0), (ammoX, ammoY, 400, 200))
-    ammo2 = pygame.draw.rect(screen, (0, 0, 40), (ammo2X - 300, ammo2Y - 100, 400, 200))
-    cursorImg = pygame.draw.circle(screen, (255, 0, 0), [pyautogui.position().x, pyautogui.position().y], playerWidth)
+    ammo2 = pygame.draw.rect(screen, (0, 0, 40), (ammo2X - 300, ammo2Y - 150, 400, 200))
+    cursorImg = pygame.draw.circle(screen, (255, 0, 0), [pyautogui.position().x, pyautogui.position().y],
+                                   playerWidth)
     food = pygame.draw.rect(screen, (255, 255, 255), (foodX, foodY, 20, 20))
 
     # Score label
+    fps_text = my_font.render(f'{clock.get_fps() : .1f} FPS', False, (0, 0, 0))
     player1_score = my_font.render(f'Player1: {playerWidth - 50}', False, (255, 0, 255))
     player2_score = my_font.render(f'Player2: {player2Width - 50}', False, (0, 0, 255))
-    screen.blit(player1_score, (25, 25))
-    screen.blit(player2_score, (pygame.display.Info().current_w - 240, 25))
+    screen.blit(player1_score, (25, 30))
+    screen.blit(player2_score, (pygame.display.Info().current_w - player2_score.get_width() - 25, 30))
+    screen.blit(fps_text, (pygame.display.Info().current_w // 2 - fps_text.get_width() // 2, 10))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -108,25 +124,29 @@ while isRunning:
         food = pygame.draw.rect(screen, (100, 100, 100), (foodX, foodY, 20, 20))
         player2Img = pygame.image.load("player1Right.png").convert_alpha()
         player2Img = pygame.transform.flip(player2Img, player2Direction, False)
-        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
+        player2Img = pygame.transform.scale(player2Img,
+                                            (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
     elif 10 <= timing <= 20:
         playerRect = pygame.draw.rect(screen, (255, 0, 0), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (10, 255, 50), (foodX, foodY, 20, 20))
         player2Img = pygame.image.load("player1Left.png").convert_alpha()
         player2Img = pygame.transform.flip(player2Img, player2Direction, False)
-        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
+        player2Img = pygame.transform.scale(player2Img,
+                                            (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
     elif 20 <= timing <= 30:
         playerRect = pygame.draw.rect(screen, (0, 255, 255), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (30, 55, 150), (foodX, foodY, 20, 20))
         player2Img = pygame.image.load("player1Left.png").convert_alpha()
         player2Img = pygame.transform.flip(player2Img, player2Direction, False)
-        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
+        player2Img = pygame.transform.scale(player2Img,
+                                            (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
     elif 30 <= timing <= 40:
         playerRect = pygame.draw.rect(screen, (0, 0, 50), (x, y, playerWidth, playerHeight))
         food = pygame.draw.rect(screen, (0, 30, 90), (foodX, foodY, 20, 20))
         player2Img = pygame.image.load("player1Right.png").convert_alpha()
         player2Img = pygame.transform.flip(player2Img, player2Direction, False)
-        player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
+        player2Img = pygame.transform.scale(player2Img,
+                                            (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
     elif timing >= 40:
         timing = 0
     screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
@@ -146,7 +166,7 @@ while isRunning:
     if keys[pygame.K_i]:
         screen.fill((0, 50, 50))
         end_text = restart_font.render(f'Restarting the game!', False, (0, 0, 0))
-        screen.blit(end_text, (pygame.display.Info().current_w / 2 - 350, pygame.display.Info().current_h / 2))
+        screen.blit(end_text, (pygame.display.Info().current_w // 2 - 350, pygame.display.Info().current_h // 2))
         pygame.display.update()
         time.sleep(1)
         playerWidth = 50
@@ -240,7 +260,8 @@ while isRunning:
                 screen.blit(end_text, (pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
             else:
                 end_text = my_font.render(f'Player2 wins with {player2Width - 50} score', False, (0, 0, 255))
-                screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
+                screen.blit(end_text,
+                            (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
         # screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
         pygame.display.update()
         time.sleep(2)
@@ -248,3 +269,12 @@ while isRunning:
         pygame.quit()
 
 pygame.quit()
+
+
+def initGame():
+    pass
+
+
+if __name__ == '__main__':
+    initGame()
+#    gameLoop()
