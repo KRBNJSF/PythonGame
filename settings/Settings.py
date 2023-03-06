@@ -8,4 +8,4 @@ SCREEN_HEIGHT = pygame.display.Info().current_h
 SCALE = 3
 isRunning = True
 BLACK = (0, 0, 0)
-millis = 1.3
+seconds = 1.3

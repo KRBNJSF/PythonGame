@@ -3,6 +3,8 @@ import random
 import keyboard
 import pyautogui
 import time
+
+from main import player1, player2
 from settings import Settings
 from entity.Entity import Entity
 
@@ -17,9 +19,9 @@ class start:
     my_font = pygame.font.SysFont("Comic Sans MS", 40)
     restart_font = pygame.font.SysFont("Comic Sans MS", 80)
 
-    player1 = Entity(50, 50, 60, 100, 0, "player1Left.png")
+    player1 = Entity(50, 50, 60, 100, 0, "player1Left.png", False, 8)
     player2 = Entity(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 150, 0,
-                     "player1Left.png")
+                     "player1Left.png", False, 8)
 
     player2X = pygame.display.Info().current_w - 150
     player2Y = pygame.display.Info().current_h - 150
@@ -39,7 +41,7 @@ class start:
                 (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
                  pygame.display.Info().current_h // 2))
     pygame.display.update()
-    time.sleep(Settings.millis)
+    time.sleep(Settings.seconds)
 
     screen.fill(Settings.BLACK)
     start_text = my_font.render("Press 'ctrl+q' to end the game early!", False, (0, 0, 255))
@@ -47,7 +49,7 @@ class start:
                 (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
                  pygame.display.Info().current_h // 2 - start_text.get_height()))
     pygame.display.update()
-    time.sleep(Settings.millis)
+    time.sleep(Settings.seconds)
 
     screen.fill(Settings.BLACK)
     start_text = my_font.render("Press 'i' to restart the game!", False, (0, 0, 255))
@@ -55,7 +57,7 @@ class start:
                 (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
                  pygame.display.Info().current_h // 2 - start_text.get_height() // 2))
     pygame.display.update()
-    time.sleep(Settings.millis)
+    time.sleep(Settings.seconds)
 
     foodX = random.randint(10, pygame.display.Info().current_w - 20)
     foodY = random.randint(10, pygame.display.Info().current_h - 20)
@@ -67,10 +69,10 @@ class start:
     playerVelocity = 8
     playerDirection = False
 
-    ammoX = x
-    ammoY = y
-    ammo2X = player2X
-    ammo2Y = player2Y
+    ammoX = player1.x
+    ammoY = player1.y
+    ammo2X = player2.x
+    ammo2Y = player2.y
 
     imgObject = pygame.image.load("dog.jpg")
     imgObject = pygame.transform.scale(imgObject, (100, 100))
@@ -97,8 +99,8 @@ class start:
 
             # Score label
             fps_text = my_font.render(f'{clock.get_fps() : .1f} FPS', False, (0, 0, 0))
-            player1_score = my_font.render(f'Player1: {playerWidth - 50}', False, (255, 0, 255))
-            player2_score = my_font.render(f'Player2: {player2Width - 50}', False, (0, 0, 255))
+            player1_score = my_font.render(f'Player1: {player1.width - 50}', False, (255, 0, 255))
+            player2_score = my_font.render(f'Player2: {player2.width - 50}', False, (0, 0, 255))
             screen.blit(player1_score, (25, 30))
             screen.blit(player2_score, (pygame.display.Info().current_w - player2_score.get_width() - 25, 30))
             screen.blit(fps_text, (pygame.display.Info().current_w // 2 - fps_text.get_width() // 2, 10))
@@ -196,15 +198,15 @@ class start:
                 ammo2Y = player2Y
 
             if keys[pygame.K_UP] and player2Y > 0:
-                player2Y -= player2Velocity
+                player2Y -= player2.velocity
             if keys[pygame.K_DOWN] and player2Y < pygame.display.Info().current_h - player2Rect.height:
-                player2Y += player2Velocity
+                player2Y += player2.velocity
             if keys[pygame.K_LEFT] and player2X > 0:
-                player2X -= player2Velocity
-                player2Direction = True
+                player2X -= player2.velocity
+                player2.direction = True
             if keys[pygame.K_RIGHT] and player2X < pygame.display.Info().current_w - player2Rect.width:
-                player2X += player2Velocity
-                player2Direction = False
+                player2X += player2.velocity
+                player2.direction = False
 
             pygame.mouse.set_visible(False)
 
