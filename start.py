@@ -19,9 +19,9 @@ class start:
     my_font = pygame.font.SysFont("Comic Sans MS", 40)
     restart_font = pygame.font.SysFont("Comic Sans MS", 80)
 
-    player1 = Entity(50, 50, 60, 100, 0, "player1Left.png", False, 8)
+    player1 = Entity(50, 50, 60, 100, 0, "player2Left.png", False, 8)
     player2 = Entity(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 150, 0,
-                     "player1Left.png", False, 8)
+                     "player2Left.png", False, 8)
 
     player2X = pygame.display.Info().current_w - 150
     player2Y = pygame.display.Info().current_h - 150
@@ -74,9 +74,9 @@ class start:
     ammo2X = player2.x
     ammo2Y = player2.y
 
-    imgObject = pygame.image.load("dog.jpg")
+    imgObject = pygame.image.load("assets/dog.jpg")
     imgObject = pygame.transform.scale(imgObject, (100, 100))
-    mainCharacter = pygame.image.load("pixelart.png")
+    mainCharacter = pygame.image.load("assets/pixelart.png")
     mainCharacter = pygame.transform.scale(mainCharacter, (60, 60))
 
     s = pygame.Surface((1000, 750))  # the size of your rect
@@ -114,7 +114,7 @@ class start:
             # convert alpha to draw only the object without transparent background -> collision
             playerRect = pygame.draw.rect(screen, (255, 0, 255), (x, y, playerWidth, playerHeight))
             player2Rect = pygame.draw.rect(screen, (0, 50, 50), (player2X, player2Y, player2Width, player2Height))
-            player2Img = pygame.image.load("player1Right.png").convert_alpha()
+            player2Img = pygame.image.load("assets/player2Right.png").convert_alpha()
             player2Img = pygame.transform.flip(player2Img, player2Direction, False)
             player2Img = pygame.transform.scale(player2Img, (3 * player2Width, 3 * player2Height))
             # pes = screen.blit(imgObject, (pyautogui.position().x, pyautogui.position().y))
@@ -129,28 +129,28 @@ class start:
             if 0 <= timing <= 10:
                 playerRect = pygame.draw.rect(screen, (0, 0, 255), (x, y, playerWidth, playerHeight))
                 food = pygame.draw.rect(screen, (100, 100, 100), (foodX, foodY, 20, 20))
-                player2Img = pygame.image.load("player1Right.png").convert_alpha()
+                player2Img = pygame.image.load("assets/player2Right.png").convert_alpha()
                 player2Img = pygame.transform.flip(player2Img, player2Direction, False)
                 player2Img = pygame.transform.scale(player2Img,
                                                     (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
             elif 10 <= timing <= 20:
                 playerRect = pygame.draw.rect(screen, (255, 0, 0), (x, y, playerWidth, playerHeight))
                 food = pygame.draw.rect(screen, (10, 255, 50), (foodX, foodY, 20, 20))
-                player2Img = pygame.image.load("player1Left.png").convert_alpha()
+                player2Img = pygame.image.load("assets/player2Left.png").convert_alpha()
                 player2Img = pygame.transform.flip(player2Img, player2Direction, False)
                 player2Img = pygame.transform.scale(player2Img,
                                                     (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
             elif 20 <= timing <= 30:
                 playerRect = pygame.draw.rect(screen, (0, 255, 255), (x, y, playerWidth, playerHeight))
                 food = pygame.draw.rect(screen, (30, 55, 150), (foodX, foodY, 20, 20))
-                player2Img = pygame.image.load("player1Left.png").convert_alpha()
+                player2Img = pygame.image.load("assets/player2Left.png").convert_alpha()
                 player2Img = pygame.transform.flip(player2Img, player2Direction, False)
                 player2Img = pygame.transform.scale(player2Img,
                                                     (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
             elif 30 <= timing <= 40:
                 playerRect = pygame.draw.rect(screen, (0, 0, 50), (x, y, playerWidth, playerHeight))
                 food = pygame.draw.rect(screen, (0, 30, 90), (foodX, foodY, 20, 20))
-                player2Img = pygame.image.load("player1Right.png").convert_alpha()
+                player2Img = pygame.image.load("assets/player2Right.png").convert_alpha()
                 player2Img = pygame.transform.flip(player2Img, player2Direction, False)
                 player2Img = pygame.transform.scale(player2Img,
                                                     (Settings.SCALE * player2Width, Settings.SCALE * player2Height))
