@@ -83,6 +83,12 @@ s.set_alpha(128)  # alpha level
 s.fill((255, 255, 255))  # this fills the entire surface
 screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
 
+def draw_text(text, color, width, height):
+    screen.blit(my_font.render(text, False, color),
+                (width - start_text.get_width() // 2,
+                 height))
+    pygame.display.update()
+
 # def gameLoop():
 while Settings.isRunning:
     timing += 1
