@@ -1,17 +1,11 @@
 class Entity:
-    X = 0
-    Y = 0
 
-    def __init__(self, height, width, x, y, score, image, direction, velocity, boost):
-        self.height = height
-        self.width = width
+    def __init__(self, x, y, width, height, image):
         self.x = x
         self.y = y
-        self.score = score
+        self.width = width
+        self.height = height
         self.image = image
-        self.direction = direction
-        self.velocity = velocity
-        self.boost = boost
 
     def drawObject(self):
         pass

@@ -5,9 +5,14 @@ import pyautogui
 import time
 from settings import Settings
 from entity.Entity import Entity
+from entity.Player import Player
 import Game
 
+# SET UP
 PREFIX = "./assets/"
+dogX = 20
+dogY = 20
+timing = 0
 
 pygame.init()
 
@@ -16,9 +21,12 @@ clock = pygame.time.Clock()
 my_font = pygame.font.SysFont("Comic Sans MS", 40)
 restart_font = pygame.font.SysFont("Comic Sans MS", 80)
 
-player1 = Entity(22, 15, 60, 100, 0, PREFIX + "character.png", False, 8, 100)
-player2 = Entity(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 150, 0, PREFIX + "player2Left.png",
+player1 = Player(22, 15, 60, 100, 0, PREFIX + "character.png", False, 8, 100)
+player2 = Player(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 150, 0, PREFIX + "player2Left.png",
                  False, 8, 100)
+pebble = Entity(0, 0, Settings.SCALE * 14, Settings.SCALE * 12, PREFIX + "stone.png")
+pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
+pebble.y = random.randint(pebble.height, pygame.display.Info().current_h - pebble.height)
 
 # boost = 100.0
 
@@ -31,14 +39,11 @@ player2 = Entity(50, 50, Settings.SCREEN_WIDTH - 150, Settings.SCREEN_HEIGHT - 1
 # player2Direction = False
 # player2Direction = False
 
-dogX = 20
-dogY = 20
-
-timing = 0
-
+# START UP TEXT
 start_text = my_font.render("First one to get 10 score wins!", False, (0, 0, 255))
 screen.blit(start_text,
-            (pygame.display.Info().current_w // 2 - start_text.get_width() // 2, pygame.display.Info().current_h // 2))
+            (pygame.display.Info().current_w // 2 - start_text.get_width() // 2,
+             pygame.display.Info().current_h // 2))
 pygame.display.update()
 time.sleep(Settings.seconds)
 
@@ -58,8 +63,8 @@ screen.blit(start_text,
 pygame.display.update()
 time.sleep(Settings.seconds)
 
-foodX = random.randint(10, pygame.display.Info().current_w - 20)
-foodY = random.randint(10, pygame.display.Info().current_h - 20)
+# foodX = random.randint(10, pygame.display.Info().current_w - 20)
+# foodY = random.randint(10, pygame.display.Info().current_h - 20)
 
 # y = 100
 # x = 60
@@ -75,19 +80,19 @@ ammo2Y = player2.y
 
 imgObject = pygame.image.load(PREFIX + "dog.jpg")
 imgObject = pygame.transform.scale(imgObject, (100, 100))
-# mainCharacter = pygame.image.load(PREFIX + "pixelart.png")
-# mainCharacter = pygame.transform.scale(mainCharacter, (60, 60))
 
 s = pygame.Surface((1000, 750))  # the size of your rect
 s.set_alpha(128)  # alpha level
 s.fill((255, 255, 255))  # this fills the entire surface
 screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
 
+
 def draw_text(text, color, width, height):
-    screen.blit(my_font.render(text, False, color),
-                (width - start_text.get_width() // 2,
-                 height))
+    # Fix width, height
+    my_text = my_font.render(text, False, color)
+    screen.blit(my_text, width, height)
     pygame.display.update()
+
 
 # def gameLoop():
 while Settings.isRunning:
@@ -104,13 +109,30 @@ while Settings.isRunning:
     ammo2 = pygame.draw.rect(screen, (0, 0, 40), (ammo2X, ammo2Y, 2, 2))
     cursorImg = pygame.draw.circle(screen, (255, 0, 0), [pyautogui.position().x, pyautogui.position().y],
                                    player1.width)
-    foodRect = pygame.draw.rect(screen, Settings.BACKGROUND_COLOR,
-                                (foodX, foodY, Settings.SCALE * 14, Settings.SCALE * 12))
-    foodImg = pygame.image.load(PREFIX + "stone.png").convert_alpha()
-    foodImg = pygame.transform.scale(foodImg,
-                                     (Settings.SCALE * 14, Settings.SCALE * 12))
 
-    # Score label
+    # IMG INITIALIZATION
+    # convert alpha to draw only the object without transparent background -> collision
+
+    # PLAYER1
+    player1Rect = pygame.draw.rect(screen, Settings.BACKGROUND_COLOR,
+                                   (player1.x, player1.y, player1.width, player1.height))
+    player1Img = pygame.image.load(player1.image).convert_alpha()
+    pygame.transform.flip(player1Img, player1.direction, False)
+    pygame.transform.scale(player1Img, (Settings.SCALE * player1.width, Settings.SCALE * player1.height))
+
+    # PLAYER2
+    player2Rect = pygame.draw.rect(screen, Settings.BACKGROUND_COLOR,
+                                   (player2.x, player2.y, player2.width, player2.height))
+    player2Img = pygame.image.load(player2.image).convert_alpha()
+    pygame.transform.flip(player2Img, player2.direction, False)
+    pygame.transform.scale(player2Img, (Settings.SCALE * player2.width, Settings.SCALE * player2.height))
+
+    pebbleRect = pygame.draw.rect(screen, Settings.BACKGROUND_COLOR,
+                                  (pebble.x, pebble.y, pebble.width, pebble.height))
+    pebbleImg = pygame.image.load(pebble.image).convert_alpha()
+    pygame.transform.scale(pebbleImg, (Settings.SCALE * 14, Settings.SCALE * 12))
+
+    # LABELS
     fps_text = my_font.render(f'{clock.get_fps() : .1f} FPS', False, (0, 0, 0))
     player1_score = my_font.render(f'Player1: {round(player1.score, 0)}', False, (255, 0, 255))
     player2_score = my_font.render(f'Player2: {player2.score}', False, (0, 0, 255))
@@ -129,30 +151,17 @@ while Settings.isRunning:
 
     keys = pygame.key.get_pressed()
 
-    # Player img initialization
-    # convert alpha to draw only the object without transparent background -> collision
-    player1Rect = pygame.draw.rect(screen, (255, 0, 255), (player1.x, player1.y, player1.width, player1.height))
-    player1Img = pygame.image.load(player1.image).convert_alpha()
-    player1Img = pygame.transform.flip(player1Img, player1.direction, False)
-    player1Img = pygame.transform.scale(player1Img,
-                                        (Settings.SCALE * player1.width, Settings.SCALE * player1.height))
-
-    player2Rect = pygame.draw.rect(screen, Settings.BACKGROUND_COLOR,
-                                   (player2.x, player2.y, player2.width, player2.height))
-    player2Img = pygame.image.load(player2.image).convert_alpha()
-    player2Img = pygame.transform.flip(player2Img, player2.direction, False)
-    player2Img = pygame.transform.scale(player2Img,
-                                        (Settings.SCALE * player2.width, Settings.SCALE * player2.height))
     # pes = screen.blit(imgObject, (pyautogui.position().x, pyautogui.position().y))
     # screen.blit(player2Img, (player2X - player2Rect.width, player2Y - player2Rect.height))
     screen.blit(imgObject, (dogX, dogY))
     # screen.blit(mainCharacter, (player1.x, player1.y))
-    screen.blit(foodImg, (foodX, foodY))
+    screen.blit(pebbleImg, (pebble.x, pebble.y))
 
     # if clock.get_time() % 2 == 0:
     #  timing += 1
 
     # print(timing)
+    # PLAYER ANIMATION
     if 0 <= timing <= 10:
         # player1Rect = pygame.draw.rect(screen, (0, 0, 255), (player1.x, player1.y, player1.width, player1.height))
         # foodRect = pygame.draw.rect(screen, (100, 100, 100), (foodX, foodY, 20, 20))
@@ -243,8 +252,8 @@ while Settings.isRunning:
         player2.x = pygame.display.Info().current_w - 150
         player2.y = pygame.display.Info().current_h - 150
 
-        foodX = random.randint(10, pygame.display.Info().current_w - foodRect.width)
-        foodY = random.randint(10, pygame.display.Info().current_h - foodRect.height)
+        # foodX = random.randint(10, pygame.display.Info().current_w - foodRect.width)
+        # foodY = random.randint(10, pygame.display.Info().current_h - foodRect.height)
 
     if keys[pygame.K_LSHIFT]:
         if player1.boost >= 1:
@@ -295,29 +304,20 @@ while Settings.isRunning:
     else:
         player2.velocity = 8
 
-    if player1Rect.colliderect(foodRect):
+    if player1Rect.colliderect(pebbleRect):
         player1.score += .5
         player1.score += .5
-        print(player1.score)
-        foodX = random.randint(10, pygame.display.Info().current_w - foodRect.width)
-        foodY = random.randint(10, pygame.display.Info().current_h - foodRect.height)
-        foodRect = pygame.draw.rect(screen, (255, 0, 255), (foodX, foodY, 10, 10))
+        pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
+        pebble.y = random.randint(pebble.width, pygame.display.Info().current_h - pebble.height)
 
-    if player2Rect.colliderect(foodRect):
+    if player2Rect.colliderect(pebbleRect):
         player2.score += 1
         player2.height += 1
-        print(player2.score)
-        foodX = random.randint(10, pygame.display.Info().current_w - foodRect.width)
-        foodY = random.randint(10, pygame.display.Info().current_h - foodRect.height)
-        foodRect = pygame.draw.rect(screen, (255, 0, 255), (foodX, foodY, 10, 10))
+        pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
+        pebble.y = random.randint(pebble.width, pygame.display.Info().current_h - pebble.height)
 
         if player1Rect.colliderect(ammo2):
             player1.velocity = 0
-
-    # playerRect
-    # player2Img
-    # ammo
-    # ammo2
 
     pygame.display.update()
     screen.fill(Settings.BACKGROUND_COLOR)

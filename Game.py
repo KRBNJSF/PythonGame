@@ -1,6 +1,6 @@
 class Game:
     def __init__(self):
-        run
+        run(self)
 
 
 def run(self):
