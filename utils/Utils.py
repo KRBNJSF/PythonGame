@@ -8,7 +8,7 @@ class Utils:
 
     def play_music(self):
         pygame.mixer.music.load(Settings.MUSIC_PREFIX + self)
-        pygame.mixer.music.set_volume(1)
+        pygame.mixer.music.set_volume(.1)
         pygame.mixer.music.play()
 
     @staticmethod

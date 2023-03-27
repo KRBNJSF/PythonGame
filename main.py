@@ -35,7 +35,6 @@ pygame.mouse.set_visible(False)
 
 Utils.play_music("intro.wav")
 
-
 # OBJECT INITIALIZATION
 player1 = Player(60, 120, 15 * Settings.SCALE, 22 * Settings.SCALE, 0, False, 8, 100.0,
                  Settings.IMG_PREFIX + "character.png", False)
@@ -46,7 +45,7 @@ pebble = Entity(0, 0, 14 * Settings.SCALE, 11 * Settings.SCALE, Settings.IMG_PRE
 pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
 pebble.y = random.randint(pebble.height, pygame.display.Info().current_h - pebble.height)
 
-powerup = Entity(0, 0, 14 * Settings.SCALE, 12 * Settings.SCALE, Settings.IMG_PREFIX + "powerDuck.png")
+powerup = Entity(0, 0, 14 * Settings.SCALE, 12 * Settings.SCALE, Settings.IMG_PREFIX + "stemb.png")
 powerup.x = random.randint(0, pygame.display.Info().current_w - powerup.width)
 powerup.y = random.randint(0, pygame.display.Info().current_h - powerup.height)
 
@@ -139,6 +138,8 @@ while Settings.isRunning:
         player2_boost = Settings.small_font.render(f'Boost: {round(player2.boost, 2)}', False, (0, 0, 255))
 
         # RENDER
+        # bg = pygame.image.load(Settings.IMG_PREFIX + "bg.png")
+        # screen.blit(bg, (0, 0))
         screen.blit(player1_boost, (25, 80))
         screen.blit(player2_boost,
                     (pygame.display.Info().current_w - (player2_boost.get_width() + 25), 80))
