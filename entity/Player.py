@@ -1,3 +1,6 @@
+import pygame
+
+
 class Player:
     MAX_SCORE = 10
 
@@ -13,5 +16,7 @@ class Player:
         self.image = image
         self.isPressed = isPressed
 
-    def drawObject(self):
-        pass
+    def drawObject(self, path):
+        img = pygame.image.load("assets/" + path).convert_alpha()
+        img = pygame.transform.flip(self.image, self.direction, False)
+        img = pygame.transform.scale(self.image, (self.width, self.height))
