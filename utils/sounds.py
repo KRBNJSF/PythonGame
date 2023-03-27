@@ -10,5 +10,5 @@ class Sounds:
     collect = pygame.mixer.Sound(Settings.MUSIC_PREFIX + "collect.mp3")
     collect.set_volume(1)
 
-    win = pygame.mixer.Sound(Settings.MUSIC_PREFIX + "winnn.wav")
+    win = pygame.mixer.Sound(Settings.MUSIC_PREFIX + "victory.wav")
     win.set_volume(1)

@@ -33,8 +33,7 @@ screen = pygame.display.set_mode([pygame.display.Info().current_w, pygame.displa
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(False)
 
-#Utils.play_music("intro.wav")
-Sounds.bg_music.play()
+Utils.play_music("intro.wav")
 
 
 # OBJECT INITIALIZATION
@@ -96,8 +95,8 @@ screen.blit(start_text,
              pygame.display.Info().current_h // 2 - start_text.get_height() // 2))
 pygame.display.update()
 time.sleep(Settings.seconds)
-Utils.stop_music("intro.wav")
-Utils.play_music("bg_music.wav")
+Utils.stop_music()
+Sounds.bg_music.play()
 
 # def gameLoop():
 while Settings.isRunning:
@@ -335,7 +334,7 @@ while Settings.isRunning:
         if player1.score >= Player.MAX_SCORE or player2.score >= Player.MAX_SCORE or keyboard.is_pressed("ctrl+q"):
             if player1.score >= Player.MAX_SCORE or player1.score > player2.score:
                 Sounds.bg_music.stop()
-                Sounds.win.play()
+                Sounds.win.play(-1)
                 end_text = Settings.my_font.render(f'Player1 wins with {int(player1.score)} score', False,
                                                    (255, 0, 255))
                 screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
@@ -345,7 +344,7 @@ while Settings.isRunning:
                     screen.blit(end_text, (pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
                 else:
                     Sounds.bg_music.stop()
-                    Sounds.win.play()
+                    Sounds.win.play(-1)
                     end_text = Settings.my_font.render(f'Player2 wins with {int(player2.score)} score', False,
                                                        (0, 0, 255))
                     screen.blit(end_text,
@@ -370,6 +369,8 @@ while Settings.isRunning:
             Settings.isRunning = False
             pygame.quit()
         elif keyboard.is_pressed("y"):
+            Sounds.win.stop()
+            Sounds.bg_music.play(-1)
             pygame.display.update()
             screen.fill(Settings.BACKGROUND_COLOR)
             end_text = Settings.restart_font.render(f'Restarting the game!', False, Settings.BLACK)
