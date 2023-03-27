@@ -9,6 +9,7 @@ from entity.Player import Player
 import Game
 from settings.Settings import my_font
 from utils.Utils import Utils
+from utils.sounds import Sounds
 
 pygame.init()
 pygame.mixer.init()
@@ -32,7 +33,9 @@ screen = pygame.display.set_mode([pygame.display.Info().current_w, pygame.displa
 clock = pygame.time.Clock()
 pygame.mouse.set_visible(False)
 
-Utils.play_music("intro.wav")
+#Utils.play_music("intro.wav")
+Sounds.bg_music.play()
+
 
 # OBJECT INITIALIZATION
 player1 = Player(60, 120, 15 * Settings.SCALE, 22 * Settings.SCALE, 0, False, 8, 100.0,
@@ -311,12 +314,14 @@ while Settings.isRunning:
         if player1Rect.colliderect(pebbleRect):
             player1.score += .5
             player1.score += .5
+            Sounds.collect.play()
             pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
             pebble.y = random.randint(pebble.width, pygame.display.Info().current_h - pebble.height)
 
         if player2Rect.colliderect(pebbleRect):
             player2.score += 1
             player2.height += 1
+            Sounds.collect.play()
             pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
             pebble.y = random.randint(pebble.width, pygame.display.Info().current_h - pebble.height)
 
@@ -329,6 +334,8 @@ while Settings.isRunning:
         # END SCREEN
         if player1.score >= Player.MAX_SCORE or player2.score >= Player.MAX_SCORE or keyboard.is_pressed("ctrl+q"):
             if player1.score >= Player.MAX_SCORE or player1.score > player2.score:
+                Sounds.bg_music.stop()
+                Sounds.win.play()
                 end_text = Settings.my_font.render(f'Player1 wins with {int(player1.score)} score', False,
                                                    (255, 0, 255))
                 screen.blit(end_text, (pygame.display.Info().current_w / 2 - 250, pygame.display.Info().current_h / 2))
@@ -337,6 +344,8 @@ while Settings.isRunning:
                     end_text = Settings.my_font.render(f'Tie!', False, Settings.BLACK)
                     screen.blit(end_text, (pygame.display.Info().current_w / 2, pygame.display.Info().current_h / 2))
                 else:
+                    Sounds.bg_music.stop()
+                    Sounds.win.play()
                     end_text = Settings.my_font.render(f'Player2 wins with {int(player2.score)} score', False,
                                                        (0, 0, 255))
                     screen.blit(end_text,
