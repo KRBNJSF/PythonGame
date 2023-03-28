@@ -20,6 +20,8 @@ dogY = 20
 animationSwitcher = 0
 timer = -100
 collided = False
+is_player_collision = False
+test_vel = 8
 
 
 def draw_text(text, color, width, height):
@@ -324,6 +326,21 @@ while Settings.isRunning:
             Sounds.collect.play()
             pebble.x = random.randint(pebble.width, pygame.display.Info().current_w - pebble.width)
             pebble.y = random.randint(pebble.width, pygame.display.Info().current_h - pebble.height)
+
+        if is_player_collision:
+            if test_vel >= 0:
+                if not player1.direction:
+                    player2.x += test_vel
+                else:
+                    player2.x += (test_vel * -1)
+                test_vel -= .5
+            else:
+                is_player_collision = False
+                test_vel = 8
+
+        if player1Rect.colliderect(player2Rect):
+            if player2.velocity == 8:
+                is_player_collision = True
 
         pygame.display.update()
         screen.fill(Settings.BACKGROUND_COLOR)
