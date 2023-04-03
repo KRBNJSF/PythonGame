@@ -97,7 +97,7 @@ screen.blit(start_text,
 pygame.display.update()
 time.sleep(Settings.seconds)
 Utils.stop_music()
-Sounds.bg_music.play()
+Sounds.bg_music.play(-1)
 
 bgImg = pygame.image.load(Settings.IMG_PREFIX + "bg.png").convert_alpha()
 

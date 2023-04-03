@@ -2,6 +2,7 @@ import pygame
 
 from settings import Settings
 
+
 class Utils:
     def convertHeight(self):
         pass
@@ -9,7 +10,7 @@ class Utils:
     def play_music(self):
         pygame.mixer.music.load(Settings.MUSIC_PREFIX + self)
         pygame.mixer.music.set_volume(.1)
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(-1)
 
     @staticmethod
     def pause_music():
