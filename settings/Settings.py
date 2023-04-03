@@ -7,13 +7,14 @@ my_font = pygame.font.SysFont("Comic Sans MS", 40)
 small_font = pygame.font.SysFont("Comic Sans MS", 20)
 restart_font = pygame.font.SysFont("Comic Sans MS", 80)
 
-isRunning = True
-isGame = True
+isRunning = 1
+isGame = 1
 
 SCREEN_WIDTH = pygame.display.Info().current_w
 SCREEN_HEIGHT = pygame.display.Info().current_h
 SCALE = 3
 seconds = 1.3
+FPS = 60
 
 BLACK = (0, 0, 0)
 BACKGROUND_COLOR = (136, 89, 47)

@@ -99,6 +99,8 @@ time.sleep(Settings.seconds)
 Utils.stop_music()
 Sounds.bg_music.play()
 
+bgImg = pygame.image.load(Settings.IMG_PREFIX + "bg.png").convert_alpha()
+
 # def gameLoop():
 while Settings.isRunning:
     if Settings.isGame:
@@ -108,7 +110,7 @@ while Settings.isRunning:
             player1.boost += 0.1
         if player2.boost < 99.9:
             player2.boost += 0.1
-        clock.tick(60)
+        clock.tick(Settings.FPS)
         # screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
         # screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
         pygame.display.set_caption(f'{clock.get_fps() :.1f} FPS ')
@@ -140,8 +142,7 @@ while Settings.isRunning:
         player2_boost = Settings.small_font.render(f'Boost: {round(player2.boost, 2)}', False, (0, 0, 255))
 
         # RENDER
-        # bg = pygame.image.load(Settings.IMG_PREFIX + "bg.png")
-        # screen.blit(bg, (0, 0))
+        screen.blit(bgImg, (0, 0))
         screen.blit(player1_boost, (25, 80))
         screen.blit(player2_boost,
                     (pygame.display.Info().current_w - (player2_boost.get_width() + 25), 80))
